@@ -81,6 +81,26 @@ func (l *Lexer) skipWhitespace() {
 
 /*
 *
+0~9 사이의 문자인지 체크
+*/
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
+}
+
+/*
+*
+숫자일때 읽음 처리
+*/
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar() //숫자일때 읽음
+	}
+	return l.input[position:l.position]
+}
+
+/*
+*
 다음 토큰 탐색(기능 문자 체크 후 처리)
 */
 func (l *Lexer) NextToken() token.Token {
@@ -111,6 +131,10 @@ func (l *Lexer) NextToken() token.Token {
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()          //문자열 확인(a~z,A~Z,_)
 			tok.Type = token.LookupIdent(tok.Literal) //예약어인 경우 처리
+			return tok
+		} else if isDigit(l.ch) { //정수일때 처리
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
