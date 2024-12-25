@@ -71,11 +71,22 @@ func (l *Lexer) readIdentifier() string {
 
 /*
 *
+문자가 빈 칸(whitespace)인경우 다음으로
+*/
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
+}
+
+/*
+*
 다음 토큰 탐색(기능 문자 체크 후 처리)
 */
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+	l.skipWhitespace()
 	switch l.ch {
 	case '=':
 		tok = newToken(token.ASSIGN, l.ch)
