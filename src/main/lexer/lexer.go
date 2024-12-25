@@ -9,7 +9,6 @@ type Lexer struct {
 	ch           byte //조사하고 있는 문자
 }
 
-// constructor
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
