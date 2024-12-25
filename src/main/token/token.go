@@ -7,7 +7,10 @@ type Token struct {
 	Literal string    //상수에 대한 처리
 }
 
-// 상수 선언
+/*
+*
+상수 선언
+*/
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
@@ -31,12 +34,20 @@ const (
 	RETURN   = "return"
 )
 
+/*
+*
+예약어 모음
+*/
 var keywords = map[string]TokenType{
 	"function": FUNCTION,
 	"let":      LET,
 	"return":   RETURN,
 }
 
+/*
+*
+예약어 모음에서 확인
+*/
 func LookupIdent(ident string) TokenType {
 	//주어진 식별자가 예약어인지 검색. 맞으면 상수, 아니면 식별자(id, name..)
 	if tok, ok := keywords[ident]; ok {

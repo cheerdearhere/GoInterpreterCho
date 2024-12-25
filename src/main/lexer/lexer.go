@@ -2,6 +2,10 @@ package lexer
 
 import "GoInterpreter/src/main/token"
 
+/*
+*
+렉서 구성
+*/
 type Lexer struct {
 	input        string
 	position     int  //현재 문자 위치
@@ -9,12 +13,20 @@ type Lexer struct {
 	ch           byte //조사하고 있는 문자
 }
 
+/*
+*
+constructor
+*/
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
+/*
+*
+문자열 확인
+*/
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -25,6 +37,10 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+/*
+*
+토큰 생성
+*/
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{
 		Type:    tokenType,
@@ -32,10 +48,19 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	}
 }
 
+/*
+*
+문자열 지정
+range: a~z, A~Z, _
+*/
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
+/*
+*
+IDENT 의 문자열 판별
+*/
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
@@ -44,6 +69,10 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+/*
+*
+다음 토큰 탐색(기능 문자 체크 후 처리)
+*/
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
