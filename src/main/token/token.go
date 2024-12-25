@@ -28,4 +28,19 @@ const (
 
 	FUNCTION = "function"
 	LET      = "let"
+	RETURN   = "return"
 )
+
+var keywords = map[string]TokenType{
+	"function": FUNCTION,
+	"let":      LET,
+	"return":   RETURN,
+}
+
+func LookupIdent(ident string) TokenType {
+	//주어진 식별자가 예약어인지 검색. 맞으면 상수, 아니면 식별자(id, name..)
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
+}

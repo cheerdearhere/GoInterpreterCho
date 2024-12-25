@@ -69,7 +69,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
-			tok.Literal = l.readIdentifier()
+			tok.Literal = l.readIdentifier()          //문자열 확인(a~z,A~Z,_)
+			tok.Type = token.LookupIdent(tok.Literal) //예약어인 경우 처리
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
