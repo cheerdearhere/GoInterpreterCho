@@ -18,8 +18,17 @@ const (
 	IDENT = "IDENT" //식별자: id, variable name...
 	INT   = "INT"   //리터럴
 
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
+
+	LT     = "<"
+	GT     = ">"
+	EQ     = "=="
+	NOT_EQ = "!="
 
 	COMMA     = ","
 	SEMICOLON = ";"
@@ -29,9 +38,13 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
-	FUNCTION = "function"
-	LET      = "let"
-	RETURN   = "return"
+	FUNCTION = "FUNCTION"
+	LET      = "LET"
+	RETURN   = "RETURN"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
 )
 
 /*
@@ -42,6 +55,10 @@ var keywords = map[string]TokenType{
 	"function": FUNCTION,
 	"let":      LET,
 	"return":   RETURN,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
 }
 
 /*
