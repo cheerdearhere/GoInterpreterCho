@@ -1,11 +1,10 @@
-# I. 첫번째 결과물
-```javascript
-let five = 5;
-let ten = 10;
-let add = function(x,y){
-    return x + y;
-};
-let result = add(five,ten);
-```
+# I. 검증 언어
+- javascript
 # II. 시동어
 >go test src/main/lexer/lexer.go
+# III. REPL(`Read Eval Print Loop`)
+- 콘솔(console)/대화형(interactive) 모드
+  - Read input
+  - Eval by Interpreter
+  - Print result
+  - Loop
