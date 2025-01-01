@@ -34,6 +34,13 @@ func (p *Parser) parseStatement() ast.Statement {
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
+
+/*
+expectPeek
+거의 모든 파서가 공유하는 단정(assertion)함수.
+다음 토큰 타입을 검사해 토큰 간의 순서를 올바르게 강제할 용도
+정확한 타입일때만 다음을 호출하는 역할로 자주사용
+*/
 func (p *Parser) expectPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
