@@ -8,7 +8,7 @@ import (
 
 func TestLetStatements(t *testing.T) {
 	input := `
-let x = 5;
+let x  5;
 let y = 10;
 let foobar = 838383;
 `
@@ -16,6 +16,10 @@ let foobar = 838383;
 	p := New(l)
 
 	program := p.ParseProgram()
+
+	//error test
+	checkParserErrors(t, p)
+
 	if program == nil {
 		t.Fatalf("ParseProgram() return nil")
 	}
@@ -36,6 +40,23 @@ let foobar = 838383;
 			return
 		}
 	}
+}
+
+/*
+check error in parser
+*/
+func checkParserErrors(t *testing.T, p *Parser) {
+	errors := p.Errors()
+	//에러가 없는경우(초기화된 경우)
+	if len(errors) == 0 {
+		return
+	}
+	t.Errorf("parser has %d errors", len(errors))
+	for _, msg := range errors {
+		t.Errorf("parser error: %q", msg)
+	}
+	//에러를 발견하면 중단
+	t.FailNow()
 }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
