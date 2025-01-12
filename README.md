@@ -31,3 +31,10 @@
         return a + b;
     };
 ```
+## D. Return 문 파싱
+
+```javascript
+return 5;
+return 10;
+return add(15);
+```
