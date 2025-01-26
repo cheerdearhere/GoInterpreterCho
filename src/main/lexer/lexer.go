@@ -145,6 +145,8 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	case '/':
 		tok = newToken(token.SLASH, l.ch)
+	case '%': //연산자 추가인 경우
+		tok = newToken(token.MODULUS, l.ch)
 	case '*':
 		tok = newToken(token.ASTERISK, l.ch)
 	case '<':
