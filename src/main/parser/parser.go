@@ -45,7 +45,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
-	token.MODULUS:  SUM,
+	token.MODULUS:  PRODUCT,
 }
 
 /*precedence method(우선순위 관련 함수)*/
