@@ -50,6 +50,7 @@ var precedences = map[token.TokenType]int{
 
 /*precedence method(우선순위 관련 함수)*/
 func (p *Parser) peekPrecedence() int {
+	defer untrace(trace("peekPrecedence"))
 	if p, ok := precedences[p.peekToken.Type]; ok {
 		return p
 	}
@@ -57,6 +58,7 @@ func (p *Parser) peekPrecedence() int {
 	return LOWEST
 }
 func (p *Parser) curPrecedence() int {
+	defer untrace(trace("curPrecedence"))
 	if p, ok := precedences[p.curToken.Type]; ok {
 		return p
 	}
@@ -64,14 +66,17 @@ func (p *Parser) curPrecedence() int {
 }
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
+	defer untrace(trace("registerPrefix"))
 	p.prefixParseFns[tokenType] = fn
 }
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
+	defer untrace(trace("registerInfix"))
 	p.infixParseFns[tokenType] = fn
 }
 
 /*Constructor*/
 func New(l *lexer.Lexer) *Parser {
+	defer untrace(trace("New"))
 	p := &Parser{
 		l:      l,
 		errors: []string{},
@@ -100,6 +105,7 @@ func New(l *lexer.Lexer) *Parser {
 	return p
 }
 func (p *Parser) Errors() []string {
+	defer untrace(trace("Errors"))
 	return p.errors
 }
 
@@ -107,6 +113,7 @@ func (p *Parser) Errors() []string {
 기댓값과 다를 경우 작용.
 */
 func (p *Parser) peekError(t token.TokenType) {
+	defer untrace(trace("peekError"))
 	msg := fmt.Sprintf(
 		"expected next token to be %s, got %s instead",
 		t,
@@ -114,10 +121,12 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 func (p *Parser) nextToken() {
+	defer untrace(trace("nextToken"))
 	p.curToken = p.peekToken
 	p.peekToken = p.l.NextToken()
 }
 func (p *Parser) parseStatement() ast.Statement {
+	defer untrace(trace("parseStatement"))
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
@@ -128,7 +137,9 @@ func (p *Parser) parseStatement() ast.Statement {
 	}
 }
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
-	return p.peekToken.Type == t
+	defer untrace(trace("peekTokenIs"))
+	isPeekToken := p.peekToken.Type == t
+	return isPeekToken
 }
 
 /*
@@ -138,6 +149,7 @@ expectPeek
 정확한 타입일때만 다음을 호출하는 역할로 자주사용
 */
 func (p *Parser) expectPeek(t token.TokenType) bool {
+	defer untrace(trace("expectPeek"))
 	if p.peekTokenIs(t) {
 		p.nextToken()
 		return true
@@ -147,11 +159,14 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 func (p *Parser) curTokenIs(t token.TokenType) bool {
-	return p.curToken.Type == t
+	defer untrace(trace("curTokenIs"))
+	isCurToken := p.curToken.Type == t
+	return isCurToken
 }
 
 /*EOF를 만나기 전까지 반복*/
 func (p *Parser) ParseProgram() *ast.Program {
+	defer untrace(trace("ParseProgram"))
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 	for p.curToken.Type != token.EOF {
@@ -166,6 +181,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 /*return Statement functions*/
 func (p *Parser) parseLetStatement() *ast.LetStatement {
+	defer untrace(trace("parseLetStatement"))
 	stmt := &ast.LetStatement{Token: p.curToken}
 	//Identifier
 	if !p.expectPeek(token.IDENT) {
@@ -184,6 +200,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	return stmt
 }
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	defer untrace(trace("parseReturnStatement"))
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 
 	p.nextToken()
@@ -195,6 +212,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 }
 
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	defer untrace(trace("parseExpressionStatement"))
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 	stmt.Expression = p.parseExpression(LOWEST)
 
@@ -205,11 +223,13 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
+	defer untrace(trace("noPrefixParseFnError"))
 	msg := fmt.Sprintf("no prefix parse function for %s found", t)
 	p.errors = append(p.errors, msg)
 }
 
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	defer untrace(trace("parseExpression"))
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
@@ -230,10 +250,12 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	return leftExp
 }
 func (p *Parser) parseIdentifier() ast.Expression {
+	defer untrace(trace("parseIdentifier"))
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	defer untrace(trace("parseIntegerLiteral"))
 	lit := &ast.IntegerLiteral{Token: p.curToken}
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
 	if err != nil {
@@ -247,6 +269,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 }
 
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	defer untrace(trace("parsePrefixExpression"))
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
@@ -259,6 +282,7 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 }
 
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	defer untrace(trace("parseInfixExpression"))
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
