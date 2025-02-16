@@ -257,6 +257,10 @@ func TestParsingInfixExpressions(t *testing.T) {
 		if !ok {
 			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 		}
+
+		//testInfixExpression(t, stmt.Expression, 5, "+", 10)
+		//testInfixExpression(t, stmt.Expression, "alice", "*", "bob")
+
 		exp, ok := stmt.Expression.(*ast.InfixExpression)
 		if !ok {
 			t.Fatalf("stmt.Expression is not ast.InfixExpression. got=%T", stmt.Expression)
@@ -367,6 +371,7 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 	t.Errorf("type of exp not handled. got=%T", exp)
 	return false
 }
+
 func testInfixExpression(t *testing.T, exp ast.Expression, left interface{}, operator string, right interface{}) bool {
 	opExp, ok := exp.(*ast.InfixExpression)
 	if !ok {
@@ -386,5 +391,4 @@ func testInfixExpression(t *testing.T, exp ast.Expression, left interface{}, ope
 	return true
 }
 
-//TODO 추가적인 Expression 처리 내용 찾아서 구현하기
 /*test general expression end*/
