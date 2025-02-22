@@ -21,7 +21,7 @@ type Expression interface {
 	expressionNode()
 }
 
-/*구문 정의*/
+/*declare struct*/
 type Program struct {
 	Statements []Statement
 }
@@ -33,41 +33,6 @@ func (p *Program) TokenLiteral() string {
 		return ""
 	}
 }
-
-type LetStatement struct {
-	Token token.Token //token.LET
-	Name  *Identifier
-	Value Expression
-}
-
-func (ls *LetStatement) statementNode()       {}
-func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
-
-type Identifier struct {
-	Token token.Token
-	Value string
-}
-
-func (i *Identifier) expressionNode()      {}
-func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
-
-type ReturnStatement struct {
-	Token       token.Token
-	ReturnValue Expression
-}
-
-func (rs *ReturnStatement) statementNode()       {}
-func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
-
-type ExpressionStatement struct {
-	Token      token.Token //표현식의 첫번째 토큰
-	Expression Expression
-}
-
-func (es *ExpressionStatement) statementNode()       {}
-func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
-
-/*for String method overloading start*/
 func (p *Program) String() string {
 	var out bytes.Buffer
 
@@ -77,6 +42,16 @@ func (p *Program) String() string {
 
 	return out.String()
 }
+
+// LetStatement start
+type LetStatement struct {
+	Token token.Token //token.LET
+	Name  *Identifier
+	Value Expression
+}
+
+func (ls *LetStatement) statementNode()       {}
+func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 func (ls *LetStatement) String() string {
 	var out bytes.Buffer
 
@@ -92,6 +67,25 @@ func (ls *LetStatement) String() string {
 
 	return out.String()
 }
+
+// Identifier start
+type Identifier struct {
+	Token token.Token
+	Value string
+}
+
+func (i *Identifier) expressionNode()      {}
+func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+func (i *Identifier) String() string       { return i.Value }
+
+// ReturnStatement start
+type ReturnStatement struct {
+	Token       token.Token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
 func (rs *ReturnStatement) String() string {
 	var out bytes.Buffer
 
@@ -102,17 +96,23 @@ func (rs *ReturnStatement) String() string {
 	out.WriteString(";")
 	return out.String()
 }
+
+// ExpressionStatement start
+type ExpressionStatement struct {
+	Token      token.Token //표현식의 첫번째 토큰
+	Expression Expression
+}
+
+func (es *ExpressionStatement) statementNode()       {}
+func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
 func (es *ExpressionStatement) String() string {
 	if es.Expression != nil {
 		return es.Expression.String()
 	}
 	return ""
 }
-func (i *Identifier) String() string { return i.Value }
 
-/*for String method overloading end*/
-
-/* Integer literal start */
+// IntegerLiteral start
 type IntegerLiteral struct {
 	Token token.Token
 	Value int64
@@ -122,9 +122,7 @@ func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
-/*Integer literal end*/
-
-/*prefix operator expression start */
+// PrefixExpression start
 type PrefixExpression struct {
 	Token    token.Token
 	Operator string
@@ -143,8 +141,7 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
-/*prefix operator expression end */
-/*infix operator expression start*/
+// InfixExpression start
 type InfixExpression struct {
 	Token    token.Token
 	Left     Expression
@@ -166,4 +163,4 @@ func (ie *InfixExpression) String() string {
 	return out.String()
 }
 
-/*infix operator expression end*/
+/*end declaring structs*/
