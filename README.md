@@ -119,6 +119,13 @@ add(5, 10);
 
 ## G. 파서 확장하기
 ### 1. 사전작업: test suit 정리: testIdentifier()
+### 2. bool literal
+```javascript
+true;
+false;
+let foobar = true;
+let barfoo = false; 
+```
 
 
 
